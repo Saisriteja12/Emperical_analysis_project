@@ -1,0 +1,52 @@
+#Reading the dataset
+df = pd.read_csv("/content/drive/MyDrive/Emperical/AirBNB_2019.csv")
+df.head()
+
+#Understanding data types
+df.info()
+
+#Statistical Description of dataset
+df.describe()
+
+#Checking the Missing/Null Values
+df.isnull().sum()
+
+#Checking the Unique value of dataset
+df.nunique()
+
+#Checking the duplicate value in dataset
+df.duplicated().sum()
+
+#Exploratory Data Analysis
+
+# EDA for the Room types
+df['room_type'].value_counts()
+
+#Plot for the room_type
+fig = plt.figure(figsize=(8,8), dpi=80)
+df['room_type'].value_counts().plot(kind='bar')
+
+#EDA for Price
+df.price.value_counts().iloc[:10]
+
+#Visualization for price
+df.price.value_counts().iloc[:10].plot(figsize=(8,8), kind = 'bar')
+
+##Statistical Description of price
+df.price.describe()
+
+#Checking the dataset with high price 
+df[df['price'] ==10000]
+
+# EDA for neighbourhood_group
+df['neighbourhood_group'].value_counts()
+
+#Visualization for neighbourhood_group
+fig = plt.figure(figsize=(8,8), dpi=80)
+df['neighbourhood_group'].value_counts().plot(kind='pie',  autopct='%1.0f%%', startangle=360, fontsize=13)
+
+#EDA for neighbourhood
+df['neighbourhood'].value_counts().iloc[:5]
+
+#Checking the unique value of neighbourhood
+df['neighbourhood'].unique()  
