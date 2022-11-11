@@ -1,0 +1,66 @@
+#Word Cloud for neighbourhood
+plt.subplots(figsize=(10,10))
+wordcloud = WordCloud(background_color='white', width=1920,height=1080).generate(" ".join(df.neighbourhood))
+plt.imshow(wordcloud)
+plt.axis('off')
+plt.show()
+
+#EDA for reviews_per_month'
+df[df['reviews_per_month'] > 1].reviews_per_month.value_counts().sum() 
+
+#Getting the reviews_per_month which have greater than 1
+df[df['reviews_per_month'] > 1]['reviews_per_month'].value_counts().iloc[:5]  
+
+#Getting the maximum value for reviews_per_month
+df['reviews_per_month'].max()
+
+#checking the maximum reviews_per_month in dataset
+df[df['reviews_per_month'] == 58.5]
+
+#Correlation Between Continuous Variables
+corr = df.corr()
+plt.figure(figsize=(15,8))
+sns.heatmap(corr, annot=True)
+
+#Scatterplot for latitude with neighbourhood_group
+plt.figure(figsize=(10,6))
+sns.scatterplot(df.longitude,df.latitude,hue=df.neighbourhood_group)
+
+#Visualization for Density of price for neighbourhood_group
+v2=sns.violinplot(data=df[df.price < 200], x='neighbourhood_group', y='price')
+v2.set_title('Density and distribution of prices for each neighberhood_group')
+
+#Count for the neighbourhood
+df['neighbourhood'].value_counts().iloc[:10]
+
+#Visualization for subplot of Neighbourhood
+Ngbr =df.loc[df['neighbourhood'].isin(['Williamsburg','Bedford-Stuyvesant','Harlem','Bushwick','Upper West Side','Hell\'s Kitchen','East Village','Upper East Side','Crown Heights','Midtown'])]
+pl =sns.catplot(x='neighbourhood', hue='neighbourhood_group', col='room_type', data=Ngbr, kind='count')
+pl.set_xticklabels(rotation=90)
+
+#DATA CLEANING
+
+#Unwanted columns such as id,name , host_name and last_review which is not useful for analysis so, they are removed.
+df.drop(['host_id','name','latitude','longitude','id','host_name','last_review'], axis=1, inplace=True)
+df.head()
+
+#Droping the null values
+df = df.dropna()
+
+#Verify the Missing/Null Values after drop
+df.isnull().sum()
+
+#Understanding data types without null values
+df.info()
+
+There are significant outliers in the "price" variable.
+In order to reduce the impact of outliers and increase the normalcy of the data, we will take the data between the 25th and 75th percentiles. 
+
+#Taking the dataset between the 25th and 75th percentiles to remove the outliers
+Q1 = df['price'].quantile(0.25)
+Q3 = df['price'].quantile(0.75)
+IQR=Q3-Q1
+df = df[~((df['price']<(Q1-1.5*IQR))|(df['price']>(Q3+1.5-IQR)))]
+
+#Understanding data types after removing the outliers
+df.info()
